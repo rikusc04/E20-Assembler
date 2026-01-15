@@ -42,7 +42,6 @@ The E20 is a 16-bit RISC architecture with 8 general-purpose registers and a sim
         ```
     - The `/tests` directory contains test cases for validating the assembler:
         - `.s` files: Assembly source programs
-        - `.bin` files: Expected machine code output
     - Each assembly file includes the expected binary output in comments at the end for reference
     - Note: If you do decide to specify the name of your output file, it is recommended that the name matches that of the input file to avoid any confusion
 
