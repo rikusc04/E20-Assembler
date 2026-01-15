@@ -1,4 +1,4 @@
-# E20-Assembler
+# E20-Assembler (Currently in Progress)
 This is a two-pass assembler written in C for the E20 ISA, performing symbol resolution, pseudo-instruction expansion, and instruction encoding to generate executable 16-bit machine code suitable for CPU simulation.
 
 ## Overview
