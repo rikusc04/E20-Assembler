@@ -4,8 +4,7 @@ This is a two-pass assembler written in C for the E20 ISA, performing symbol res
 ## Overview
 This project implements a two-pass assembler for the E20 Architecture, a teaching ISA commonly used in university Computer Architecture courses. The assembler executes two passes over the source code; the first pass builds a symbol table by recording all the labels and their addresses, and the second pass generates the actual machine code by encoding instructions and resolving the recorded symbol references.
 
-The E20 is a 16-bit RISC architecture with 8 general-purpose registers and a simplified instruction set. This assembler is responsible for translating human readable assembly language into machine code that can be executed on an E20 simulator, which can be found here:
-    > https://github.com/rikusc04/E20-CPU-Cache-Simulator
+The E20 is a 16-bit RISC architecture with 8 general-purpose registers and a simplified instruction set. This assembler is responsible for translating human readable assembly language into machine code that can be executed on an E20 simulator, which can be found here: https://github.com/rikusc04/E20-CPU-Cache-Simulator
 
 ## Features
 **Two Pass Assembly Algorithm**: Efficient symbol resolution for forward references
