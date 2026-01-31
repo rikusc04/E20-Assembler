@@ -24,20 +24,28 @@ The E20 is a 16-bit RISC architecture with 8 general-purpose registers and a sim
     - The `-Wall` flag enables all compiler warnings to ensure code quality
 2. To run/test the E20 Assembler use command:
     ```bash
-    ./e20_assembler test.s
+    ./e20_assembler ./tests/test.s
     ```
     - More generally, the command is given by
         ```bash
-        ./e20_assembler {test_name}.s
+        ./e20_assembler ./tests/{test_name}.s
         ```
     - The assembly file must always be an input parameter to the program when running the assembler
     - You can also choose to specify the name of the output file:
         ```bash
-        ./e20_assembler test.s test.bin
+        ./e20_assembler ./tests/test.s test.bin
+        ```
+       - Or:
+        ```bash
+        ./e20_assembler ./tests/test.s ./tests/test.bin
         ```
     - More generally, the command for this is given by
         ```bash
         ./e20_assembler {test_name}.s {output_filename}.bin
+        ```
+       - Or:
+        ```bash
+        ./e20_assembler ./tests/{test_name}.s ./{output_directory}/{output_filename}.bin
         ```
     - The `/tests` directory contains test cases for validating the assembler:
         - `.s` files: Assembly source programs
