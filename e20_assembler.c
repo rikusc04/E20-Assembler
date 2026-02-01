@@ -621,9 +621,10 @@ int main(int argc, char* argv[]) {
     }
     else {
         fprintf(stderr, "Usage: %s <input.s> [output.bin]\n", argv[0]);
-        fprintf(stderr, "  If output.bin is not specified, it will be auto-generated\n");
-        fprintf(stderr, "  Example: %s input.s             (produces input.bin)\n", argv[0]);
-        fprintf(stderr, "           %s input.s output.bin  (produces output.bin)\n", argv[0]);
+        fprintf(stderr, "Must provide an intput file (.s)\n");
+        fprintf(stderr, "If output.bin is not specified, it will be auto-generated\n");
+        fprintf(stderr, "Example: %s input.s (produces input.bin)\n", argv[0]);
+        fprintf(stderr, "         %s input.s output.bin (produces output.bin)\n", argv[0]);
         return 1;
     }
     assemble(argv[1], outputFile);
