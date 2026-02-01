@@ -25,7 +25,7 @@ typedef struct {
     int num_instructions;
 } Assembler;
 
-void error(const char *msg, int line_num) {
+void error(const char* msg, int line_num) {
     if (line_num > 0) {
         fprintf(stderr, "Error at line %d: %s\n", line_num, msg);
     } 
@@ -35,8 +35,8 @@ void error(const char *msg, int line_num) {
     exit(1);
 }
 
-void strip_comment(char *line) {
-    char *comment = strchr(line, '#');
+void strip_comment(char* line) {
+    char* comment = strchr(line, '#');
     if (comment) {
         *comment = '\0';
     }
@@ -46,9 +46,9 @@ int is_whitespace(char c) {
     return c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
 
-int tokenize(char *line, char tokens[][MAX_LABEL_LENGTH], int max_tokens) {
+int tokenize(char* line, char tokens[][MAX_LABEL_LENGTH], int max_tokens) {
     int count = 0;
-    char *ptr = line;
+    char* ptr = line;
     
     while (*ptr && count < max_tokens) {
         while (*ptr && (is_whitespace(*ptr) || *ptr == ',')) {
@@ -72,7 +72,7 @@ int tokenize(char *line, char tokens[][MAX_LABEL_LENGTH], int max_tokens) {
     return count;
 }
 
-int is_valid_label(const char *label) {
+int is_valid_label(const char* label) {
     if (!label || !*label || (!isalpha(label[0]) && label[0] != '_')) {
         return 0;
     }
@@ -85,13 +85,13 @@ int is_valid_label(const char *label) {
     return 1;
 }
 
-void to_lowercase(char *str) {
+void to_lowercase(char* str) {
     for (int i = 0; str[i]; i++) {
         str[i] = tolower(str[i]);
     }
 }
 
-int find_symbol(Assembler *as, const char *name) {
+int find_symbol(Assembler* as, const char* name) {
     char lower_name[MAX_LABEL_LENGTH];
     strncpy(lower_name, name, MAX_LABEL_LENGTH - 1);
     lower_name[MAX_LABEL_LENGTH - 1] = '\0';
@@ -105,7 +105,7 @@ int find_symbol(Assembler *as, const char *name) {
     return -1;
 }
 
-void add_symbol(Assembler *as, const char *name, int address) {
+void add_symbol(Assembler* as, const char* name, int address) {
     if (as->num_symbols >= MAX_LABELS) {
         error("Too many labels", current_line);
     }
@@ -127,7 +127,7 @@ void add_symbol(Assembler *as, const char *name, int address) {
     as->num_symbols++;
 }
 
-int parse_register(const char *reg_str) {
+int parse_register(const char* reg_str) {
     if (reg_str[0] != '$') {
         char msg[128];
         sprintf(msg, "Invalid register: %s", reg_str);
@@ -143,7 +143,7 @@ int parse_register(const char *reg_str) {
     return reg_num;
 }
 
-int parse_immediate(Assembler *as, const char *imm_str) {
+int parse_immediate(Assembler* as, const char* imm_str) {
     char lower_imm[MAX_LABEL_LENGTH];
     strncpy(lower_imm, imm_str, MAX_LABEL_LENGTH - 1);
     lower_imm[MAX_LABEL_LENGTH - 1] = '\0';
@@ -165,11 +165,11 @@ int parse_immediate(Assembler *as, const char *imm_str) {
     return 0;
 }
 
-void parse_memory_ref(Assembler *as, const char *mem_ref, int *imm, int *reg) {
+void parse_memory_ref(Assembler* as, const char* mem_ref, int* imm, int* reg) {
     char buffer[MAX_LABEL_LENGTH];
     strncpy(buffer, mem_ref, MAX_LABEL_LENGTH - 1);
     buffer[MAX_LABEL_LENGTH - 1] = '\0';
-    char *paren = strchr(buffer, '(');
+    char* paren = strchr(buffer, '(');
     if (!paren) {
         char msg[128];
         sprintf(msg, "Invalid memory reference: %s", mem_ref);
@@ -177,8 +177,8 @@ void parse_memory_ref(Assembler *as, const char *mem_ref, int *imm, int *reg) {
     }
     
     *paren = '\0';
-    char *reg_part = paren + 1;
-    char *close_paren = strchr(reg_part, ')');
+    char* reg_part = paren + 1;
+    char* close_paren = strchr(reg_part, ')');
     if (close_paren) {
         *close_paren = '\0';
     }
@@ -216,7 +216,7 @@ uint16_t encode_unsigned(int value, int bits) {
     return (uint16_t)(value & ((1 << bits) - 1));
 }
 
-uint16_t encode_three_reg(const char *opcode, char operands[][MAX_LABEL_LENGTH], int num_ops) {
+uint16_t encode_three_reg(const char* opcode, char operands[][MAX_LABEL_LENGTH], int num_ops) {
     if (num_ops != 3) {
         char msg[128];
         sprintf(msg, "%s requires 3 operands", opcode);
@@ -276,7 +276,7 @@ uint16_t encode_jr(char operands[][MAX_LABEL_LENGTH], int num_ops) {
     return instr;
 }
 
-uint16_t encode_two_reg(Assembler *as, const char *opcode, char operands[][MAX_LABEL_LENGTH], int num_ops, int pc) {
+uint16_t encode_two_reg(Assembler* as, const char* opcode, char operands[][MAX_LABEL_LENGTH], int num_ops, int pc) {
     uint16_t opcode_bits;
     
     if (strcmp(opcode, "addi") == 0) {
@@ -350,7 +350,7 @@ uint16_t encode_two_reg(Assembler *as, const char *opcode, char operands[][MAX_L
     return instr;
 }
 
-uint16_t encode_jump(Assembler *as, const char *opcode, char operands[][MAX_LABEL_LENGTH], int num_ops) {
+uint16_t encode_jump(Assembler* as, const char* opcode, char operands[][MAX_LABEL_LENGTH], int num_ops) {
     if (num_ops != 1) {
         char msg[128];
         sprintf(msg, "%s requires 1 operand", opcode);
@@ -378,7 +378,7 @@ uint16_t encode_jump(Assembler *as, const char *opcode, char operands[][MAX_LABE
     return instr;
 }
 
-uint16_t encode_instruction(Assembler *as, const char *opcode, char operands[][MAX_LABEL_LENGTH], int num_ops, int pc) {
+uint16_t encode_instruction(Assembler* as, const char* opcode, char operands[][MAX_LABEL_LENGTH], int num_ops, int pc) {
     char lower_opcode[MAX_LABEL_LENGTH];
     strncpy(lower_opcode, opcode, MAX_LABEL_LENGTH - 1);
     lower_opcode[MAX_LABEL_LENGTH - 1] = '\0';
@@ -404,8 +404,7 @@ uint16_t encode_instruction(Assembler *as, const char *opcode, char operands[][M
     }
 }
 
-void expand_pseudo(const char *opcode, char operands[][MAX_LABEL_LENGTH], 
-                   int *num_ops, int pc, char *new_opcode) {
+void expand_pseudo(const char* opcode, char operands[][MAX_LABEL_LENGTH], int* num_ops, int pc, char* new_opcode) {
     char lower_opcode[MAX_LABEL_LENGTH];
     strncpy(lower_opcode, opcode, MAX_LABEL_LENGTH - 1);
     lower_opcode[MAX_LABEL_LENGTH - 1] = '\0';
@@ -439,7 +438,7 @@ void expand_pseudo(const char *opcode, char operands[][MAX_LABEL_LENGTH],
     }
 }
 
-void pass1(Assembler *as, FILE *fp) {
+void pass1(Assembler* as, FILE* fp) {
     char line[MAX_LINE_LENGTH];
     char tokens[20][MAX_LABEL_LENGTH];
     int address = 0;
@@ -482,7 +481,7 @@ void pass1(Assembler *as, FILE *fp) {
     }
 }
 
-void pass2(Assembler *as, FILE *fp) {
+void pass2(Assembler* as, FILE* fp) {
     char line[MAX_LINE_LENGTH];
     char tokens[20][MAX_LABEL_LENGTH];
     char operands[10][MAX_LABEL_LENGTH];
@@ -554,12 +553,12 @@ void pass2(Assembler *as, FILE *fp) {
     }
 }
 
-void assemble(const char *input_file, const char *output_file) {
+void assemble(const char* input_file, const char* output_file) {
     Assembler as;
     as.num_symbols = 0;
     as.num_instructions = 0;
     
-    FILE *input = fopen(input_file, "r");
+    FILE* input = fopen(input_file, "r");
     if (!input) {
         fprintf(stderr, "Error: Cannot open input file '%s'\n", input_file);
         exit(1);
@@ -571,7 +570,7 @@ void assemble(const char *input_file, const char *output_file) {
     pass2(&as, input);
     fclose(input);
     
-    FILE *output = fopen(output_file, "w");
+    FILE* output = fopen(output_file, "w");
     if (!output) {
         fprintf(stderr, "Error: Cannot create output file '%s'\n", output_file);
         exit(1);
@@ -590,7 +589,7 @@ void assemble(const char *input_file, const char *output_file) {
     printf("Generated %d instructions\n", as.num_instructions);
 }
 
-char *generate_output_file(const char *inputFile) {
+char* generate_output_file(const char* inputFile) {
     const char* last_slash = strrchr(inputFile, '/');
     const char* last_backslash = strrchr(inputFile, '\\');
     const char* sep = last_slash;
